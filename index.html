@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hotel Naveena Grand — Live Room Status</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#fff; --muted:#6b7280; --border:#e6e9ee;
+    --occupied:#e8f7ed;
+    --vacant_cleaned:#eef2ff;
+    --vacant_dirty:#fff1f2;
+    --blocked:#fff7ed;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    font-family:Inter,system-ui,Arial,sans-serif;
+    background:var(--bg);
+    margin:0;
+    padding:18px;
+  }
+
+  .app{
+    max-width:1100px;
+    margin:0 auto;
+    background:var(--card);
+    padding:16px;
+    border-radius:10px;
+    border:1px solid var(--border);
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  h1{
+    margin:0;
+    font-size:18px;
+  }
+
+  .meta{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin-top:20px;
+  }
+
+  .room{
+    background:#fff;
+    border-radius:8px;
+    border:1px solid var(--border);
+    min-height:70px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+    text-align:center;
+  }
+
+  .room .num{
+    font-weight:700;
+    margin-bottom:6px;
+  }
+
+  /* Status Backgrounds */
+  .room.occupied{ background:var(--occupied); }
+  .room.vacant_cleaned{ background:var(--vacant_cleaned); }
+  .room.vacant_dirty{ background:var(--vacant_dirty); }
+  .room.blocked{ background:var(--blocked); }
+
+  footer{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:13px;
+    text-align:right;
+  }
+</style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Hotel Naveena Grand — Room Status</h1>
+      <div class="meta">Live updates — View Only</div>
+    </div>
+  </header>
+
+  <div id="roomsGrid" class="grid"></div>
+
+  <footer>Rooms: 101–115, 201–215, 301–315 — Auto-refresh every 1 second</footer>
+</div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+
+<script>
+const SUPABASE_URL = "https://jaklizxkcmytzjshxnxk.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impha2xpenhrY215dHpqc2h4bnhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMTgzMTcsImV4cCI6MjA3ODY5NDMxN30.nyxO9VdMr-nIz0PvoVWqgh8tTeDLMf8rIilMDbGsj-w";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const grid = document.getElementById("roomsGrid");
+
+async function loadRooms(){
+  const { data: rooms, error } = await supabaseClient
+    .from("rooms")
+    .select("*")
+    .order("floor",{ascending:true})
+    .order("room",{ascending:true});
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  grid.innerHTML = "";
+
+  rooms.forEach(r => {
+    const div = document.createElement("div");
+    div.className = `room ${r.status}`;
+    const label = r.status.replace(/_/g, " ").toUpperCase();
+
+    div.innerHTML = `
+      <div class='num'>${r.room}</div>
+      <div>${label}</div>
+    `;
+
+    grid.appendChild(div);
+  });
+}
+
+loadRooms();
+setInterval(loadRooms, 1000); // Auto-refresh every 1 second
+</script>
+
+</body>
+</html>
