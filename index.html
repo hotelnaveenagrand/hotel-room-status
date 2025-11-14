@@ -2,90 +2,78 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hotel Naveena Grand — Live Room Status</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hotel Naveena Grand — Room Status</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f4f6f8; --card:#fff; --muted:#6b7280; --border:#e6e9ee;
+    --bg:#f4f6f8; --card:#ffffff; --border:#e6e9ee;
+    --muted:#6b7280; --accent:#f7d774;
     --occupied:#e8f7ed;
     --vacant_cleaned:#eef2ff;
     --vacant_dirty:#fff1f2;
     --blocked:#fff7ed;
   }
+  *{box-sizing:border-box}
+  body{font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);margin:0;padding:18px}
+  .app{max-width:1150px;margin:0 auto;background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--border)}
+  header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:4px}
+  h1{margin:0;font-size:20px;font-weight:700}
+  .meta{color:var(--muted);font-size:13px;margin-top:4px}
 
-  *{ box-sizing:border-box; }
+  /* Summary */
+  .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:16px}
+  .count-card{background:#fff;padding:12px;border-radius:10px;border:1px solid var(--border);text-align:center}
+  .count-card div:first-child{font-size:13px;color:var(--muted)}
+  .count-num{font-size:22px;font-weight:800;margin-top:4px}
 
-  body{
-    font-family:Inter,system-ui,Arial,sans-serif;
-    background:var(--bg);
-    margin:0;
-    padding:18px;
+  /* Floor Tabs */
+  .floor-tabs{display:flex;gap:8px;margin-top:20px}
+  .tab{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:600}
+  .tab.active{background:linear-gradient(90deg,var(--accent),#fff3d6)}
+
+  /* Rooms Grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:14px}
+  .room{background:#fff;border-radius:10px;border:1px solid var(--border);padding:12px;text-align:center;min-height:90px;display:flex;flex-direction:column;justify-content:center}
+  .room .num{font-size:18px;font-weight:700;margin-bottom:6px}
+  .occupied{background:var(--occupied)}
+  .vacant_cleaned{background:var(--vacant_cleaned)}
+  .vacant_dirty{background:var(--vacant_dirty)}
+  .blocked{background:var(--blocked)}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+@media (max-width: 480px) {
+    header h1 { font-size: 15px; font-weight:700; }
+    header { padding-bottom: 0; margin-bottom: 4px; }
+    .meta { font-size: 11px; }
+
+    .summary { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .count-card { padding: 8px; }
+    .count-num { font-size: 16px; }
+
+    .floor-tabs { gap: 4px; margin-top: 10px; }
+    .tab { padding: 5px 8px; font-size: 12px; }
+
+    .grid { gap: 6px; margin-top: 10px; }
+    .room { min-height: 65px; padding: 8px; border-radius: 8px; }
+    .room .num { font-size: 15px; }
+    .room div:last-child { font-size: 11px; }
   }
+    .summary { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .count-card { padding: 10px; }
+    .count-num { font-size: 18px; }
 
-  .app{
-    max-width:1100px;
-    margin:0 auto;
-    background:var(--card);
-    padding:16px;
-    border-radius:10px;
-    border:1px solid var(--border);
-  }
+    .floor-tabs { gap: 6px; }
+    .tab { padding: 6px 10px; font-size: 13px; }
 
-  header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-
-  h1{
-    margin:0;
-    font-size:18px;
-  }
-
-  .meta{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:4px;
-  }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    margin-top:20px;
-  }
-
-  .room{
-    background:#fff;
-    border-radius:8px;
-    border:1px solid var(--border);
-    min-height:70px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:8px;
-    text-align:center;
-  }
-
-  .room .num{
-    font-weight:700;
-    margin-bottom:6px;
-  }
-
-  /* Status Backgrounds */
-  .room.occupied{ background:var(--occupied); }
-  .room.vacant_cleaned{ background:var(--vacant_cleaned); }
-  .room.vacant_dirty{ background:var(--vacant_dirty); }
-  .room.blocked{ background:var(--blocked); }
-
-  footer{
-    margin-top:12px;
-    color:var(--muted);
-    font-size:13px;
-    text-align:right;
+    .grid { gap: 8px; }
+    .room {
+      min-height: 70px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .room .num { font-size: 16px; }
+    .room div:last-child { font-size: 12px; }
   }
 </style>
 </head>
@@ -99,51 +87,86 @@
     </div>
   </header>
 
+  <!-- Summary Cards -->
+  <div class="summary">
+    <div class="count-card"><div>Occupied</div><div id="cOcc" class="count-num">0</div></div>
+    <div class="count-card"><div>Vacant &amp; Cleaned</div><div id="cClean" class="count-num">0</div></div>
+    <div class="count-card"><div>Vacant &amp; Dirty</div><div id="cDirty" class="count-num">0</div></div>
+    <div class="count-card"><div>Blocked</div><div id="cBlocked" class="count-num">0</div></div>
+  </div>
+
+  <!-- Floor Tabs -->
+  <div id="floorTabs" class="floor-tabs"></div>
+
+  <!-- Rooms Grid -->
   <div id="roomsGrid" class="grid"></div>
 
-  <footer>Rooms: 101–115, 201–215, 301–315 — Auto-refresh every 1 second</footer>
+  <footer>Auto-refresh every 1 second</footer>
 </div>
 
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-
 <script>
 const SUPABASE_URL = "https://jaklizxkcmytzjshxnxk.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impha2xpenhrY215dHpqc2h4bnhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMTgzMTcsImV4cCI6MjA3ODY5NDMxN30.nyxO9VdMr-nIz0PvoVWqgh8tTeDLMf8rIilMDbGsj-w";
-
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const floors=[1,2,3];
+let activeFloor = 1;
+
+const tabs = document.getElementById("floorTabs");
 const grid = document.getElementById("roomsGrid");
 
+function buildTabs(){
+  tabs.innerHTML = "";
+  floors.forEach(f=>{
+    const t=document.createElement("div");
+    t.className = "tab" + (f===activeFloor ? " active" : "");
+    t.textContent = f + "00s";
+    t.onclick = ()=>{ activeFloor = f; loadRooms(); };
+    tabs.appendChild(t);
+  });
+}
+
 async function loadRooms(){
+  buildTabs();
+
+  // Fetch ALL rooms from all floors
   const { data: rooms, error } = await supabaseClient
-    .from("rooms")
-    .select("*")
-    .order("floor",{ascending:true})
-    .order("room",{ascending:true});
+      .from("rooms")
+      .select("*")
+      .order("floor", { ascending:true })
+      .order("room", { ascending:true });
 
-  if(error){
-    console.error(error);
-    return;
-  }
+  if(error){ console.error(error); return; }
 
+  // GLOBAL counts across all floors
+  let occ=0, clean=0, dirty=0, blk=0;
+  rooms.forEach(r=>{
+    if(r.status==="occupied") occ++;
+    else if(r.status==="vacant_cleaned") clean++;
+    else if(r.status==="vacant_dirty") dirty++;
+    else if(r.status==="blocked") blk++;
+  });
+
+  document.getElementById('cOcc').textContent = occ;
+  document.getElementById('cClean').textContent = clean;
+  document.getElementById('cDirty').textContent = dirty;
+  document.getElementById('cBlocked').textContent = blk;
+
+  // Render ONLY selected floor rooms
+  const floorRooms = rooms.filter(r => Number(r.floor) === Number(activeFloor));
   grid.innerHTML = "";
 
-  rooms.forEach(r => {
+  floorRooms.forEach(r=>{
     const div = document.createElement("div");
     div.className = `room ${r.status}`;
-    const label = r.status.replace(/_/g, " ").toUpperCase();
-
-    div.innerHTML = `
-      <div class='num'>${r.room}</div>
-      <div>${label}</div>
-    `;
-
+    div.innerHTML = `<div class='num'>${r.room}</div><div>${r.status.replace(/_/g," ").toUpperCase()}</div>`;
     grid.appendChild(div);
   });
 }
 
 loadRooms();
-setInterval(loadRooms, 1000); // Auto-refresh every 1 second
+setInterval(loadRooms, 1000);(loadRooms, 1000);
 </script>
 
 </body>
